@@ -1,0 +1,13 @@
+pluginManagement {
+	repositories {
+		maven { url = 'https://repo.spring.io/snapshot' }
+		gradlePluginPortal()
+	}
+}
+rootProject.name = 'order-processing-platform'
+
+include 'shared-lib'
+include 'api-gateway'
+include 'order-service'
+include 'payment-service'
+include 'notification-service'

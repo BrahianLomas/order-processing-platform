@@ -1,0 +1,82 @@
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version '4.0.8-SNAPSHOT' apply false
+	id 'io.spring.dependency-management' version '1.1.6'
+}
+
+group = 'com.brahian'
+version = '1.0.0'
+
+repositories {
+	mavenCentral()
+	maven { url 'https://repo.spring.io/snapshot' }
+}
+
+allprojects {
+	repositories {
+		mavenCentral()
+		maven { url 'https://repo.spring.io/snapshot' }
+	}
+}
+
+subprojects {
+	apply plugin: 'java'
+	apply plugin: 'io.spring.dependency-management'
+
+	java {
+		sourceCompatibility = '21'
+		targetCompatibility = '21'
+	}
+
+	dependencyManagement {
+		imports {
+			mavenBom "org.springframework.boot:spring-boot-bom:4.0.8-SNAPSHOT"
+		}
+
+		dependencies {
+			dependency 'org.springframework.kafka:spring-kafka:3.1.1'
+			dependency 'com.stripe:stripe-java:23.10.0'
+			dependency 'io.github.resilience4j:resilience4j-spring-boot3:2.1.0'
+			dependency 'io.github.resilience4j:resilience4j-retry:2.1.0'
+			dependency 'io.github.resilience4j:resilience4j-circuitbreaker:2.1.0'
+			dependency 'com.fasterxml.jackson.core:jackson-databind:2.17.0'
+			dependency 'org.mapstruct:mapstruct:1.5.5.Final'
+			dependency 'org.mapstruct:mapstruct-processor:1.5.5.Final'
+			dependency 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.17.0'
+		}
+	}
+
+	dependencies {
+		compileOnly 'org.projectlombok:lombok:1.18.36'
+		annotationProcessor 'org.projectlombok:lombok:1.18.36'
+		testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	}
+}
+
+// Aplicar Spring Boot SOLO a los microservicios
+configure([
+		project(':api-gateway'),
+		project(':order-service'),
+		project(':payment-service'),
+		project(':notification-service')
+]) {
+	apply plugin: 'org.springframework.boot'
+
+	tasks.named('bootJar') {
+		enabled = true
+	}
+
+	tasks.named('jar') {
+		enabled = false
+	}
+}
+
+// shared-lib: solo librería
+project(':shared-lib') {
+	apply plugin: 'java-library'
+
+	dependencies {
+		api 'com.auth0:java-jwt:4.4.0'
+		api 'com.fasterxml.jackson.core:jackson-databind'
+	}
+}
