@@ -1,0 +1,71 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot'
+    id 'io.spring.dependency-management'
+}
+
+group = 'org.example'
+version = '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+    maven { url 'https://repo.spring.io/snapshot' }
+}
+
+dependencies {
+    implementation project(':shared-lib')
+
+    // Spring Boot Web & Security
+    implementation("org.springframework.boot:spring-boot-starter-web:4.1.0")
+    implementation("org.springframework.boot:spring-boot-starter-security:4.1.0")
+    implementation("org.springframework.boot:spring-boot-starter-data-jpa:4.1.0")
+    implementation 'org.springframework.kafka:spring-kafka'
+
+    // Database
+    implementation("org.hibernate.orm:hibernate-core:7.4.5.Final")
+    implementation("com.mysql:mysql-connector-j:26.7.0")
+
+    // Lombok
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+
+    // Testing
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.security:spring-security-test'
+
+
+    implementation("tools.jackson.core:jackson-databind:3.2.2")
+
+    implementation 'org.mapstruct:mapstruct:1.5.5.Final'
+    annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.5.Final'
+
+    // Stripe SDK
+    implementation 'com.stripe:stripe-java:23.10.0'
+
+    // Resilience4j
+    implementation 'io.github.resilience4j:resilience4j-spring-boot3:2.1.0'
+    implementation 'io.github.resilience4j:resilience4j-retry:2.1.0'
+    implementation 'io.github.resilience4j:resilience4j-circuitbreaker:2.1.0'
+
+    // Jackson para LocalDateTime
+    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.17.0'
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
+
+tasks.named('bootRun') {
+    doFirst {
+        def envFile = rootProject.file('.env')
+        if (envFile.exists()) {
+            envFile.readLines().each { line ->
+                line = line.trim()
+                if (line && !line.startsWith('#') && line.contains('=')) {
+                    def idx = line.indexOf('=')
+                    environment line.substring(0, idx).trim(), line.substring(idx + 1).trim()
+                }
+            }
+        }
+    }
+}
