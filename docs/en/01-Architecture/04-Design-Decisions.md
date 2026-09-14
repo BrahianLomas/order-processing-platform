@@ -20,6 +20,7 @@ tags: [architecture, en]
 | **Secrets via `.env`** (gitignored) + `bootRun` injects them as environment variables | Avoids committing the JWT secret, the Stripe key and the MySQL password; see [[../02-Setup/02-Local-Setup|Local Setup Guide]] |
 | **Shared JWT** across `api-gateway`, `order-service` and `payment-service` (same `app.jwt.secret`) | `api-gateway` signs, the other two validate — same HS256 symmetric key |
 | **`GenericResponse` via inheritance** (not a `data` wrapper) to homologate responses | Each concrete response (`LoginResponse`, `CarSaleResponse`, `PaymentResponse`...) extends `GenericResponse` and adds `response_code`/`description`/`timestamp`, keeping its business fields "flat"; see [[../04-API-Reference/00-Response-Format\|Response Format]] |
+| **Public Swagger UI** (no JWT needed to open it) on all 3 REST services | Prioritizes demo/portfolio use: anyone can explore the API with zero friction; the "Authorize" button (JWT) still protects the actual calls into `order-service`/`payment-service` |
 
 See also the full pattern breakdown in [[../06-Technologies/02-Patterns-Used|Patterns Used]].
 

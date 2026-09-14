@@ -24,6 +24,7 @@ tags: [technologies, es]
 | **Spring Data JPA** | (vía BOM Spring Boot) | Persistencia en los 4 servicios Spring Boot |
 | **Spring Kafka** | `3.1.1` | `order-service`, `payment-service`, `notification-service` |
 | **Spring Security** | (vía BOM Spring Boot) | `api-gateway` (firma JWT), `order-service` y `payment-service` (validan JWT) |
+| **springdoc-openapi** | `3.1.0` | Swagger UI en `api-gateway`, `order-service`, `payment-service` (`/api/swagger-ui/index.html`), público, con soporte de JWT vía "Authorize" |
 | **spring-boot-starter-web** | (vía BOM) | `notification-service` la incluye pero no la usa (sin controllers) |
 | **auth0 java-jwt** | `4.4.0` (root) / `4.6.0` (`shared-lib`) | Generación/validación de JWT HS256 |
 | **stripe-java** | `23.10.0` | Integración de pagos en `payment-service` |

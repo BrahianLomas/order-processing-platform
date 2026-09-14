@@ -84,6 +84,10 @@ Guía completa (incluyendo cómo sembrar un customer y probar el flujo con curl)
 
 ## Pruébalo
 
+- **Swagger UI** (con los servicios corriendo) — pública, no necesitas token para explorarla; click en **Authorize** y pega un JWT de `/auth/login` para probar los endpoints protegidos interactivamente:
+  - api-gateway: http://localhost:8080/api/swagger-ui/index.html
+  - order-service: http://localhost:8081/api/swagger-ui/index.html
+  - payment-service: http://localhost:8082/api/swagger-ui/index.html
 - **Colección de Postman**: [`docs/assets/postman/order-processing-platform.postman_collection.json`](docs/assets/postman/order-processing-platform.postman_collection.json) — encadena registro → login → crear venta → consultar pago
 - **Referencia de API con ejemplos de request/response**: [docs/es/04-API-Reference/](docs/es/04-API-Reference/01-Authentication.md)
 

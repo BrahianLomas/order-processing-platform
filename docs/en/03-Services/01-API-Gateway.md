@@ -25,6 +25,7 @@ org.example.gateway
 ├── config
 │   ├── GlobalExceptionHandler   (@RestControllerAdvice)
 │   ├── JwtConfig                 (JwtUtil bean)
+│   ├── OpenApiConfig             (Swagger metadata)
 │   ├── RestAuthenticationEntryPoint (homologated 401 without a token)
 │   └── SecurityConfig            (filter chain)
 ├── controller
@@ -88,6 +89,10 @@ Full request/response detail in [[../04-API-Reference/01-Authentication|API Refe
 | `POST` | `/api/auth/refresh` | public (requires a valid token in the header) | `RefreshResponse` |
 
 All three extend `GenericResponse` — see [[../04-API-Reference/00-Response-Format|Response Format]].
+
+## 📖 Swagger UI
+
+Public, no authentication: **`http://localhost:8080/api/swagger-ui/index.html`**. Since every endpoint here is public, it doesn't show an "Authorize" button (no `bearerAuth` scheme is configured here on purpose) — use it to generate a token, then paste it into `order-service`'s/`payment-service`'s Swagger UI.
 
 ## Configuration (`application.properties`)
 

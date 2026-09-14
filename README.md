@@ -84,6 +84,10 @@ Full walkthrough (including seeding a customer and a curl-based end-to-end test)
 
 ## Try It
 
+- **Swagger UI** (once the services are running) — public, no token needed to browse; click **Authorize** and paste a JWT from `/auth/login` to try protected endpoints interactively:
+  - api-gateway: http://localhost:8080/api/swagger-ui/index.html
+  - order-service: http://localhost:8081/api/swagger-ui/index.html
+  - payment-service: http://localhost:8082/api/swagger-ui/index.html
 - **Postman collection**: [`docs/assets/postman/order-processing-platform.postman_collection.json`](docs/assets/postman/order-processing-platform.postman_collection.json) — chains register → login → create sale → check payment
 - **API reference with request/response examples**: [docs/en/04-API-Reference/](docs/en/04-API-Reference/01-Authentication.md)
 

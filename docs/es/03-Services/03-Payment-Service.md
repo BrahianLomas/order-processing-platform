@@ -23,6 +23,7 @@ org.example.payment
 │   ├── GlobalExceptionHandler
 │   ├── JwtConfig                   (bean JwtUtil)
 │   ├── KafkaConfig                 (producer PaymentProcessedEvent)
+│   ├── OpenApiConfig               (metadata Swagger + esquema bearerAuth)
 │   ├── RestAuthenticationEntryPoint (401 homologado sin token)
 │   ├── SecurityConfig              (filter chain)
 │   └── StripeConfig                (Stripe.apiKey vía @PostConstruct)
@@ -122,6 +123,10 @@ Ver detalle en [[../04-API-Reference/03-Payment-Endpoints|API Reference: Payment
 ```
 
 Sin token válido → `401 Unauthorized` con body `GenericResponse` (`response_code: E004`), generado por `RestAuthenticationEntryPoint`, sin llegar a `PaymentController`. Ver [[../04-API-Reference/00-Response-Format|Formato de Respuesta]]. Esto **no** protege el consumo de Kafka (`CarSaleEventConsumer`) — los mensajes de Kafka no pasan por el filtro de seguridad HTTP, solo las peticiones REST. Verificado en caliente junto con [[02-Order-Service|Order Service]].
+
+## 📖 Swagger UI
+
+Público, sin autenticación: **`http://localhost:8082/api/swagger-ui/index.html`**. Con botón **Authorize** (esquema `bearerAuth`) para pegar el JWT y probar `GET /payments/sales/{saleId}` desde el navegador.
 
 ## Kafka
 

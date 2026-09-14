@@ -22,6 +22,7 @@ org.example.order_service
 ├── config
 │   ├── GlobalExceptionHandler
 │   ├── JwtConfig                       (JwtUtil bean)
+│   ├── OpenApiConfig                   (Swagger metadata + bearerAuth scheme)
 │   ├── RestAuthenticationEntryPoint    (homologated 401 without a token)
 │   └── SecurityConfig                  (filter chain)
 ├── controller.CarSaleController        (/sales)
@@ -107,6 +108,10 @@ Full examples in [[../04-API-Reference/02-Sales-Endpoints|API Reference: Sales]]
 
 > [!note] Same pattern as `api-gateway`
 > `JwtConfig`, `SecurityConfig`, `JwtAuthenticationFilter` and `RestAuthenticationEntryPoint` are a deliberate copy of `api-gateway`'s (see [[01-API-Gateway|API Gateway]]), reusing `JwtUtil` from `shared-lib`. It wasn't extracted into `shared-lib` to avoid coupling that module to Spring Security — see [[../01-Architecture/04-Design-Decisions|Design Decisions]].
+
+## 📖 Swagger UI
+
+Public, no authentication: **`http://localhost:8081/api/swagger-ui/index.html`**. Unlike `api-gateway`, this one has an **Authorize** button (a `bearerAuth` scheme defined in `OpenApiConfig`) — paste the JWT obtained from `/auth/login` to try `POST/GET/DELETE /sales/*` directly from the browser.
 
 ## Kafka — Producer
 

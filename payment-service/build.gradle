@@ -26,6 +26,9 @@ dependencies {
     implementation("org.hibernate.orm:hibernate-core:7.4.5.Final")
     implementation("com.mysql:mysql-connector-j:26.7.0")
 
+    // OpenAPI / Swagger UI
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:3.1.0'
+
     // Lombok
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
