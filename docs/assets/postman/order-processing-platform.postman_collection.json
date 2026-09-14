@@ -1,0 +1,253 @@
+{
+  "info": {
+    "_postman_id": "b7055018-0a9b-4af6-8f55-f58c9f37410e",
+    "name": "order-processing-platform",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "5086638"
+  },
+  "item": [
+    {
+      "name": "Security",
+      "item": [
+        {
+          "name": "Register",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"email\": \"juan@example.com\",\r\n  \"password\": \"Password123!\",\r\n  \"firstName\": \"Juan\",\r\n  \"lastName\": \"Pérez\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{gateway_url}}/auth/register",
+              "host": [
+                "{{gateway_url}}"
+              ],
+              "path": [
+                "auth",
+                "register"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {\r",
+                  "    var jsonData = pm.response.json();\r",
+                  "    pm.environment.set(\"token\", jsonData.token);\r",
+                  "    console.log(\"✅ Token guardado: \" + jsonData.token.substring(0, 20) + \"...\");\r",
+                  "} else {\r",
+                  "    console.log(\"❌ Error en login: \" + pm.response.code);\r",
+                  "}"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"email\": \"juan@example.com\",\r\n  \"password\": \"Password123!\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{gateway_url}}/auth/login",
+              "host": [
+                "{{gateway_url}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Refresh",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {\r",
+                  "    var jsonData = pm.response.json();\r",
+                  "    pm.environment.set(\"token\", jsonData.token);\r",
+                  "    console.log(\"✅ Token guardado: \" + jsonData.token.substring(0, 20) + \"...\");\r",
+                  "} else {\r",
+                  "    console.log(\"❌ Error en login: \" + pm.response.code);\r",
+                  "}"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{gateway_url}}/auth/refresh",
+              "host": [
+                "{{gateway_url}}"
+              ],
+              "path": [
+                "auth",
+                "refresh"
+              ],
+              "query": [
+                {
+                  "key": "Authorization",
+                  "value": "Bearer {{token}}",
+                  "disabled": true
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Sales",
+      "item": [
+        {
+          "name": "Create Car Sale",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {\r",
+                  "    var jsonData = pm.response.json();\r",
+                  "    pm.environment.set(\"sale_id\", jsonData.id);\r",
+                  "    console.log(\"✅ Venta creada con ID: \" + jsonData.id);\r",
+                  "} else {\r",
+                  "    console.log(\"❌ Error creando venta: \" + pm.response.code);\r",
+                  "}"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"customerEmail\": \"juan@example.com\",\r\n  \"vehicleVin\": \"1HGCM82633A004352\",\r\n  \"vehicleMake\": \"Honda\",\r\n  \"vehicleModel\": \"Accord\",\r\n  \"vehicleYear\": 2023,\r\n  \"vehicleColor\": \"Azul\",\r\n  \"vehicleMileage\": 15000,\r\n  \"salePrice\": 25000.00,\r\n  \"discount\": 500.00\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{order_url}}/sales",
+              "host": [
+                "{{order_url}}"
+              ],
+              "path": [
+                "sales"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Payment Status",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {\r",
+                  "    var jsonData = pm.response.json();\r",
+                  "    pm.environment.set(\"sale_id\", jsonData.id);\r",
+                  "    console.log(\"✅ Venta creada con ID: \" + jsonData.id);\r",
+                  "} else {\r",
+                  "    console.log(\"❌ Error creando venta: \" + pm.response.code);\r",
+                  "}"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"customerEmail\": \"juan@example.com\",\r\n  \"vehicleVin\": \"1HGCM82633A004352\",\r\n  \"vehicleMake\": \"Honda\",\r\n  \"vehicleModel\": \"Accord\",\r\n  \"vehicleYear\": 2023,\r\n  \"vehicleColor\": \"Azul\",\r\n  \"vehicleMileage\": 15000,\r\n  \"salePrice\": 25000.00,\r\n  \"discount\": 500.00\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{payment_url}}/payments/sales/{{sale_id}}",
+              "host": [
+                "{{payment_url}}"
+              ],
+              "path": [
+                "payments",
+                "sales",
+                "{{sale_id}}"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}
