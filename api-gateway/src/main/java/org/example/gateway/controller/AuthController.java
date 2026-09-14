@@ -1,5 +1,6 @@
 package org.example.gateway.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.example.gateway.dto.LoginRequest;
 import org.example.gateway.dto.LoginResponse;
@@ -21,7 +22,7 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/register")
-    public ResponseEntity<GenericResponse> register(@RequestBody RegisterRequest request) {
+    public ResponseEntity<GenericResponse> register(@RequestBody @Valid RegisterRequest request) {
         try {
             RegisterResponse response = authService.register(request);
             response.markSuccess();
@@ -33,7 +34,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<GenericResponse> login(@RequestBody LoginRequest request) {
+    public ResponseEntity<GenericResponse> login(@RequestBody @Valid LoginRequest request) {
         try {
             LoginResponse response = authService.login(request);
             response.markSuccess();

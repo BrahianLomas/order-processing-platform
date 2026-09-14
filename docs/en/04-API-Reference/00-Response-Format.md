@@ -64,13 +64,37 @@ classDiagram
 | `E002` | Business rule violation | `BusinessException` (order-service, api-gateway) |
 | `E003` | Payment processing error | `PaymentException` (payment-service) |
 | `E004` | Unauthorized | Missing/invalid/expired JWT — returned by `RestAuthenticationEntryPoint` (401) or by failed login/refresh |
-| `E005` | Invalid input | Reserved for when `@Valid`/Bean Validation is added (not implemented yet) |
+| `E005` | Invalid input | Bean Validation (`@Valid` on the body, `@Positive` on path variables) — see [[../01-Architecture/04-Design-Decisions\|Design Decisions]] |
 | `E006` | Resource not found | Sale or payment not found (404) |
 | `E007` | Resource already exists | Reserved (e.g. duplicate email on register) |
 | `E008` | External service error | Reserved (e.g. Stripe/Kafka failures not covered today by another code) |
 
 > [!note] Reserved codes
-> `E005`, `E007` and `E008` are defined in the enum but **not yet used** by any controller — they're ready for when input validation (`@Valid`) or other mechanisms are added. Don't assume they're already wired up.
+> `E007` and `E008` are defined in the enum but **not yet used** by any controller — they're ready for future cases (e.g. explicitly detecting duplicates, or external-service failures that aren't already a `PaymentException`). Don't assume they're already wired up.
+
+## Input validation (`E005`)
+
+`RegisterRequest`, `LoginRequest` and `CreateCarSaleRequest` use Bean Validation annotations (`@NotBlank`, `@Email`, `@Size`, `@Positive`, etc.), applied via `@Valid` on the controller's `@RequestBody`. Path variables (`saleId`, `customerId`) are also validated (`@Positive`) via a class-level `@Validated`.
+
+When validation fails, the request never reaches the controller method — Spring intercepts it, and each service's `GlobalExceptionHandler` builds a single message combining every failing field:
+
+```json
+{
+  "response_code": "E005",
+  "description": "email: email must be a valid address, password: password must be at least 8 characters long",
+  "timestamp": "2026-09-13T19:32:57.806"
+}
+```
+
+For path variables, the message is cleaned up to show only the field name (not `methodName.field`, which is Bean Validation's default reporting format):
+
+```json
+{
+  "response_code": "E005",
+  "description": "saleId: saleId must be a positive number",
+  "timestamp": "2026-09-13T19:41:17.155"
+}
+```
 
 ## Example — success (`POST /api/auth/login`)
 
