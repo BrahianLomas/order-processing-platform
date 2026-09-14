@@ -1,0 +1,21 @@
+plugins {
+    id 'java-library'
+}
+
+repositories {
+    mavenCentral()
+    maven { url 'https://repo.spring.io/snapshot' }
+}
+
+dependencies {
+    api("com.auth0:java-jwt:4.6.0")
+
+    // Jackson for JSON
+    implementation("com.fasterxml.jackson.core:jackson-databind:2.22.1")
+
+}
+
+java {
+    sourceCompatibility = '21'
+    targetCompatibility = '21'
+}
