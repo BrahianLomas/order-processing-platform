@@ -43,6 +43,10 @@ tags: [technologies, es]
 
 Definidos únicamente en el `docker-compose.yml` raíz — los microservicios Java **no** tienen Dockerfile ni se orquestan vía compose.
 
+## CI
+
+**GitHub Actions** (`.github/workflows/ci.yml`): en cada push/PR a `main` corre `./gradlew build` (JDK 21 Temurin, cache de Gradle) para validar que los 5 módulos compilan y empaquetan. Sin suite de tests todavía — se agregará un job de tests cuando exista.
+
 ## Base de datos
 
 - **MySQL 8.0**, esquema único `order_platform`

@@ -1,5 +1,7 @@
 # 🚗 Car Sales Platform
 
+[![CI](https://github.com/BrahianLomas/order-processing-platform/actions/workflows/ci.yml/badge.svg)](https://github.com/BrahianLomas/order-processing-platform/actions/workflows/ci.yml)
+
 🌐 **Language:** English · [Español](README.es.md)
 
 Event-driven microservices platform for car sales, built with **Spring Boot 4**, **Apache Kafka**, **Spring Security (JWT)** and **Stripe**. Built as a portfolio project to demonstrate microservices architecture, event-driven design, and production-adjacent practices (security, homologated API responses, externalized config).
