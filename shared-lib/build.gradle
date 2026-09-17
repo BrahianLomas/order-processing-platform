@@ -13,9 +13,18 @@ dependencies {
     // Jackson for JSON
     implementation("com.fasterxml.jackson.core:jackson-databind:2.22.1")
 
+    // Testing
+    testImplementation(platform("org.junit:junit-bom:5.11.4"))
+    testImplementation("org.junit.jupiter:junit-jupiter")
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher:1.11.4")
+    testImplementation("org.assertj:assertj-core:3.26.3")
 }
 
 java {
     sourceCompatibility = '21'
     targetCompatibility = '21'
+}
+
+test {
+    useJUnitPlatform()
 }

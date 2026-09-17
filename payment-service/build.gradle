@@ -34,8 +34,9 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok'
 
     // Testing
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    testImplementation 'org.springframework.security:spring-security-test'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test:4.1.0'
+    testImplementation 'org.springframework.security:spring-security-test:6.2.0'
+    testImplementation 'org.assertj:assertj-core:3.26.3'
 
 
     implementation("tools.jackson.core:jackson-databind:3.2.2")

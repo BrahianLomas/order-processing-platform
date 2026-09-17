@@ -43,9 +43,24 @@ tags: [technologies, en]
 
 Defined only in the root `docker-compose.yml` — the Java microservices have **no** Dockerfile and are not orchestrated via compose.
 
+## Testing
+
+**37 unit tests** (JUnit 5 + Mockito + AssertJ), deliberately without `@SpringBootTest`/`@WebMvcTest` — to avoid depending on bootstrapping the full Spring context on such a new stack (Spring Boot 4 / Spring Framework 7). They cover real business logic, not getters/setters:
+
+| Module | Test class | What it covers |
+|---|---|---|
+| `shared-lib` | `JwtUtilTest` (6) | JWT generation/validation, expired token, wrong secret |
+| `api-gateway` | `AuthServiceImplTest` (6) | Register, login, invalid credentials, inactive user |
+| `api-gateway` | `RequestValidationTest` (6) | Bean Validation on `RegisterRequest`/`LoginRequest` |
+| `order-service` | `CarSaleServiceImplTest` (8) | Pricing math, cancelling a paid sale, the `sale_price = totalAmount` event quirk |
+| `order-service` | `CreateCarSaleRequestValidationTest` (5) | Bean Validation on `CreateCarSaleRequest` |
+| `payment-service` | `PaymentServiceImplTest` (6) | Simulated payment, and the actual behavior of the retry flow (see [[../01-Architecture/04-Design-Decisions\|Design Decisions]]) |
+
+Repositories/Kafka/Stripe are mocked with Mockito — `order-service` uses the real MapStruct-generated `CarSaleMapperImpl` (not mocked), since it's pure mapping logic with no side effects.
+
 ## CI
 
-**GitHub Actions** (`.github/workflows/ci.yml`): on every push/PR to `main`, runs `./gradlew build` (JDK 21 Temurin, Gradle cache) to validate that all 5 modules compile and package. No test suite yet — a test job will be added once one exists.
+**GitHub Actions** (`.github/workflows/ci.yml`): on every push/PR to `main`, runs `./gradlew test` then `./gradlew build` (JDK 21 Temurin, Gradle cache) — validates all 37 tests pass and all 5 modules compile and package. Test reports are uploaded as an artifact (`test-reports`) on every run.
 
 ## Database
 

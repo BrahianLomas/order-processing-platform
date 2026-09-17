@@ -50,6 +50,7 @@ See also the full pattern breakdown in [[../06-Technologies/02-Patterns-Used|Pat
 - **⚙️ Unused property.** `stripe.api.version=2023-10-16` is defined in payment-service, but no code reads it; the effective API version is whatever the `stripe-java:23.10.0` SDK defaults to.
 - **👤 Unused MySQL user.** `docker-compose.yml` creates a `user`/`password` account, but every service connects as `root`.
 - **🎭 No role-based access control (RBAC).** The `User.role` field is always saved as `"USER"` (never `"ADMIN"`), and all three `JwtAuthenticationFilter` copies (gateway, order, payment) build the authentication with an empty authorities list — there is no `@PreAuthorize`/`hasRole` anywhere in the codebase. Current security only distinguishes "authenticated" vs "not", not roles.
+- **🔁 A nuance in the payment retry flow.** The "does a Payment already exist?" check in `PaymentServiceImpl.processPayment` doesn't distinguish the existing record's status — it also matches the `PENDING` row that `handlePaymentFailure` creates after the first failure. With the current logic, a reprocessed event won't retry against Stripe in that scenario, so the path toward `FAILED` (after 3 failures) would need that check to distinguish an already-resolved payment from one still pending. Confirmed with `PaymentServiceImplTest`. See [[../03-Services/03-Payment-Service|Payment Service]].
 
 ---
 

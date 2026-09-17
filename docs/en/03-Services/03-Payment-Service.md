@@ -76,6 +76,9 @@ flowchart TD
     C -.circuit open.-> J["processPaymentFallback()"] --> G
 ```
 
+> [!note] A nuance in the path toward "FAILED"
+> Check `B` ("Does a Payment for this saleId already exist?") doesn't distinguish the existing payment's status — it also matches the `PENDING` row that `handlePaymentFailure` creates after the first failure. With the current logic, that means a reprocessed event (Kafka redelivery, a manual retry, etc.) doesn't reach Stripe again — it stops at `B` first. For `retryCount` to advance and a payment to reach `FAILED`, that check would need to distinguish an already-resolved payment (`PAID`/`FAILED`) from one that's still `PENDING`. Verified with `PaymentServiceImplTest`. See [[../01-Architecture/04-Design-Decisions|Design Decisions]].
+
 > [!danger] The payment is always marked successful
 > `PaymentServiceImpl.processPayment` sets `status = PAID` immediately after creating the `PaymentIntent`, without inspecting its actual status (`requires_action`, `processing`, etc.). The code itself labels this a test-mode simulation.
 

@@ -76,6 +76,9 @@ flowchart TD
     C -.circuito abierto.-> J["processPaymentFallback()"] --> G
 ```
 
+> [!note] Matiz en el camino hacia "FAILED"
+> El chequeo `B` ("¿Ya existe un Payment para este saleId?") no distingue el estado del pago existente — también coincide con el registro `PENDING` que `handlePaymentFailure` crea tras la primera falla. Esto significa que, con la lógica actual, un mismo evento reprocesado (redelivery de Kafka, reintento manual, etc.) no vuelve a intentar Stripe: se detiene en `B` antes de llegar ahí. Para que `retryCount` avance y el pago llegue a `FAILED`, se necesitaría ajustar ese chequeo para distinguir un pago ya resuelto (`PAID`/`FAILED`) de uno todavía `PENDING`. Verificado con `PaymentServiceImplTest`. Ver [[../01-Architecture/04-Design-Decisions|Decisiones de Diseño]].
+
 > [!danger] El pago siempre se marca como exitoso
 > `PaymentServiceImpl.processPayment` fija `status = PAID` inmediatamente después de crear el `PaymentIntent`, sin inspeccionar su estado real (`requires_action`, `processing`, etc.). El propio código lo etiqueta como simulación de modo test.
 

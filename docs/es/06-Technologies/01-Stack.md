@@ -43,9 +43,24 @@ tags: [technologies, es]
 
 Definidos únicamente en el `docker-compose.yml` raíz — los microservicios Java **no** tienen Dockerfile ni se orquestan vía compose.
 
+## Testing
+
+**37 tests unitarios** (JUnit 5 + Mockito + AssertJ), sin `@SpringBootTest`/`@WebMvcTest` — deliberado, para no depender de levantar el contexto completo de Spring en un stack tan nuevo (Spring Boot 4 / Spring Framework 7). Cubren la lógica de negocio real, no getters/setters:
+
+| Módulo | Clase de test | Qué prueba |
+|---|---|---|
+| `shared-lib` | `JwtUtilTest` (6) | Generación/validación de JWT, token expirado, secreto incorrecto |
+| `api-gateway` | `AuthServiceImplTest` (6) | Registro, login, credenciales inválidas, usuario inactivo |
+| `api-gateway` | `RequestValidationTest` (6) | Bean Validation de `RegisterRequest`/`LoginRequest` |
+| `order-service` | `CarSaleServiceImplTest` (8) | Cálculo de precio, cancelación de venta pagada, el quirk `sale_price = totalAmount` en el evento |
+| `order-service` | `CreateCarSaleRequestValidationTest` (5) | Bean Validation de `CreateCarSaleRequest` |
+| `payment-service` | `PaymentServiceImplTest` (6) | Pago simulado, y el comportamiento real del flujo de reintentos (ver [[../01-Architecture/04-Design-Decisions\|Decisiones de Diseño]]) |
+
+Usan mocks de Mockito para los repositorios/Kafka/Stripe — en `order-service` se usa el `CarSaleMapperImpl` real generado por MapStruct (no mockeado), ya que es lógica de mapeo pura sin efectos secundarios.
+
 ## CI
 
-**GitHub Actions** (`.github/workflows/ci.yml`): en cada push/PR a `main` corre `./gradlew build` (JDK 21 Temurin, cache de Gradle) para validar que los 5 módulos compilan y empaquetan. Sin suite de tests todavía — se agregará un job de tests cuando exista.
+**GitHub Actions** (`.github/workflows/ci.yml`): en cada push/PR a `main` corre `./gradlew test` y luego `./gradlew build` (JDK 21 Temurin, cache de Gradle) — valida que los 37 tests pasen y que los 5 módulos compilen y empaqueten. Los reportes de test se suben como artifact (`test-reports`) en cada run.
 
 ## Base de datos
 

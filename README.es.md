@@ -42,6 +42,8 @@ flowchart LR
 - **Resilience4j** (retry + circuit breaker) en la integración con Stripe
 - **Respuestas de API homologadas**: la respuesta de cada endpoint extiende una clase base común `GenericResponse` (`response_code` / `description` / `timestamp`) en vez de `Map`/formatos de error improvisados — ver [Formato de Respuesta](docs/es/04-API-Reference/00-Response-Format.md)
 - **Secretos externalizados** vía un `.env` gitignored, inyectado automáticamente en `./gradlew bootRun` — nada sensible está hardcodeado en archivos versionados
+- **37 tests unitarios** (JUnit 5 + Mockito) cubriendo lógica de negocio real — cálculo de precio, reglas de cancelación, JWT, Bean Validation
+- **CI en cada push** (GitHub Actions) corriendo la suite de tests completa + build
 - **Documentación bilingüe** (ES/EN) cubriendo arquitectura, flujo de datos, cada servicio, cada evento Kafka y cada endpoint, con diagramas
 
 ## Stack Tecnológico

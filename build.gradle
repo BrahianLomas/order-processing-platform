@@ -49,6 +49,13 @@ subprojects {
 	dependencies {
 		compileOnly 'org.projectlombok:lombok:1.18.36'
 		annotationProcessor 'org.projectlombok:lombok:1.18.36'
+	}
+}
+
+// spring-boot-starter-test only makes sense for the actual Spring Boot apps —
+// shared-lib is a plain java-library and uses JUnit 5 + AssertJ directly (see its own build.gradle).
+configure(subprojects.findAll { it.name != 'shared-lib' }) {
+	dependencies {
 		testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	}
 }

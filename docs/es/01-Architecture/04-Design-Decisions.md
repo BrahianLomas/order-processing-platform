@@ -50,6 +50,7 @@ Ver también el detalle de patrones aplicados en [[../06-Technologies/02-Pattern
 - **⚙️ Propiedad sin uso.** `stripe.api.version=2023-10-16` está definida en `payment-service` pero ningún código la lee; la versión efectiva de la API es la que trae por defecto el SDK `stripe-java:23.10.0`.
 - **👤 Usuario de MySQL sin uso.** `docker-compose.yml` crea un usuario `user`/`password`, pero todos los servicios se conectan como `root`.
 - **🎭 Sin control de roles (RBAC).** El campo `role` de `User` siempre se guarda como `"USER"` (nunca `"ADMIN"`), y los tres `JwtAuthenticationFilter` (gateway, order, payment) construyen la autenticación con una lista de *authorities* vacía — no hay ningún `@PreAuthorize`/`hasRole` en todo el código. La seguridad actual solo distingue "autenticado" vs "no autenticado", no roles.
+- **🔁 Matiz en el flujo de reintentos de pago.** El chequeo de "¿ya existe un Payment?" en `PaymentServiceImpl.processPayment` no distingue el estado del registro existente — también coincide con el `PENDING` que `handlePaymentFailure` crea tras la primera falla. Con la lógica actual, un evento reprocesado no vuelve a intentar Stripe en ese escenario, por lo que el camino hacia `FAILED` (tras 3 fallas) requeriría ajustar ese chequeo para distinguir un pago ya resuelto de uno todavía pendiente. Confirmado con `PaymentServiceImplTest`. Ver [[../03-Services/03-Payment-Service|Payment Service]].
 
 ---
 
