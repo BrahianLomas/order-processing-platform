@@ -1,6 +1,7 @@
 # 🚗 Car Sales Platform
 
 [![CI](https://github.com/BrahianLomas/order-processing-platform/actions/workflows/ci.yml/badge.svg)](https://github.com/BrahianLomas/order-processing-platform/actions/workflows/ci.yml)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=BrahianLomas_order-processing-platform&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=BrahianLomas_order-processing-platform)
 
 🌐 **Idioma:** Español · [English](README.md)
 
