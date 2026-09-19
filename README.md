@@ -68,7 +68,17 @@ Full stack details: [docs/en/06-Technologies/01-Stack.md](docs/en/06-Technologie
 ```bash
 git clone https://github.com/BrahianLomas/order-processing-platform.git
 cd order-processing-platform
+cp .env.example .env
 
+./start.sh
+```
+
+`start.sh` brings up the infrastructure (MySQL, Kafka, Zookeeper), waits for them to be healthy, compiles and starts all 4 services, then opens the 3 Swagger UIs and Postman for you. Stop everything with `./stop.sh`.
+
+<details>
+<summary>Manual step-by-step (if you'd rather run each piece yourself)</summary>
+
+```bash
 # 1. Infrastructure (MySQL, Kafka, Zookeeper)
 docker-compose up -d
 
@@ -84,6 +94,8 @@ cp .env.example .env
 ./gradlew :payment-service:bootRun
 ./gradlew :notification-service:bootRun
 ```
+
+</details>
 
 Full walkthrough (including seeding a customer and a curl-based end-to-end test): [docs/en/02-Setup/02-Local-Setup.md](docs/en/02-Setup/02-Local-Setup.md)
 

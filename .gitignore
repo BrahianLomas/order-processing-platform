@@ -39,3 +39,6 @@ out/
 
 ### Claude Code ###
 .claude/
+
+### Runtime ###
+logs/
