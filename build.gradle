@@ -2,6 +2,15 @@ plugins {
 	id 'java'
 	id 'org.springframework.boot' version '4.0.8-SNAPSHOT' apply false
 	id 'io.spring.dependency-management' version '1.1.6'
+	id 'org.sonarqube' version '7.5.0.8588'
+}
+
+sonar {
+	properties {
+		property "sonar.projectKey", "BrahianLomas_order-processing-platform"
+		property "sonar.organization", "brahianlomas"
+		property "sonar.host.url", "https://sonarcloud.io"
+	}
 }
 
 group = 'com.brahian'
@@ -22,10 +31,58 @@ allprojects {
 subprojects {
 	apply plugin: 'java'
 	apply plugin: 'io.spring.dependency-management'
+	apply plugin: 'jacoco'
 
 	java {
 		sourceCompatibility = '21'
 		targetCompatibility = '21'
+	}
+
+	test {
+		finalizedBy jacocoTestReport
+	}
+
+	def coverageExclusions = [
+			'**/dto/**',
+			'**/entity/**',
+			'**/config/**',
+			'**/exception/**',
+			'**/*MapperImpl.class',
+			'**/Main.class'
+	]
+
+	jacocoTestReport {
+		dependsOn test
+		reports {
+			xml.required = true
+		}
+		afterEvaluate {
+			classDirectories.setFrom(files(classDirectories.files.collect {
+				fileTree(dir: it, exclude: coverageExclusions)
+			}))
+		}
+	}
+
+	jacocoTestCoverageVerification {
+		dependsOn test
+		afterEvaluate {
+			classDirectories.setFrom(files(classDirectories.files.collect {
+				fileTree(dir: it, includes: ['**/service/impl/**', '**/util/**'])
+			}))
+		}
+		violationRules {
+			rule {
+				limit {
+					counter = 'LINE'
+					value = 'COVEREDRATIO'
+					minimum = 0.70
+				}
+			}
+		}
+	}
+
+	tasks.named('check') {
+		dependsOn jacocoTestCoverageVerification
 	}
 
 	dependencyManagement {
